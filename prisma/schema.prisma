@@ -1,0 +1,495 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum ReligiousBg {
+  SECULAR
+  TRADITIONAL
+  RELIGIOUS
+  RETURNING
+}
+
+enum UserRole {
+  USER
+  ACTIVIST
+  MENTOR
+  CITY_COORD_MALE
+  CITY_COORD_FEMALE
+  NEIGHBORHOOD_HEAD
+  CITY_HEAD
+  REGION_HEAD
+  NATIONAL_ADMIN
+  RABBI
+  LECTURER
+  DONOR
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Audience {
+  MEN
+  WOMEN
+  MIXED
+  FAMILIES
+  YOUTH
+}
+
+enum LessonLevel {
+  BEGINNER
+  ADVANCED
+  ALL
+}
+
+enum MentoringStage {
+  CONTACT_MADE
+  CONTENT_SENT
+  INVITED_LESSON
+  ATTENDED_LESSON
+  CHOSE_MITZVA
+  STARTED_TRACK
+  KEPT_ONE_SHABBAT
+  KEPT_TWO_SHABBATOT
+  NEEDS_MORE
+  BECAME_ACTIVIST
+}
+
+enum ContentType {
+  ARTICLE
+  VIDEO
+  PODCAST
+  QUOTE
+  STORY
+  QA
+  INFOGRAPHIC
+  TIP
+}
+
+enum EventType {
+  SHABBAT_CHIZUK
+  CHALLAH
+  EMUNAH
+  STUDY_DAY
+  SEMINAR
+  COMMUNITY
+  YOUTH
+  CITY
+  NATIONAL
+  COORDINATOR_CONF
+}
+
+model User {
+  id                 String        @id @default(cuid())
+  email              String?       @unique
+  phone              String?       @unique
+  passwordHash       String?
+  firstName          String
+  lastName           String
+  gender             Gender
+  cityId             String?
+  city               City?         @relation(fields: [cityId], references: [id])
+  neighborhood       String?
+  birthYear          Int?
+  religiousBg        ReligiousBg   @default(SECULAR)
+  maritalStatus      MaritalStatus?
+  language           String        @default("he")
+  avatarUrl          String?
+  bio                String?
+  role               UserRole      @default(USER)
+  isActive           Boolean       @default(true)
+  onboardingComplete Boolean       @default(false)
+  interests          String[]      @default([])
+  mfaEnabled         Boolean       @default(false)
+  lastActive         DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  userMitzvot      UserMitzva[]
+  userTracks       UserTrack[]
+  lessonRegs       LessonRegistration[]
+  eventRegs        EventRegistration[]
+  mentorships      Mentoring[]    @relation("MentorRelation")
+  menteeships      Mentoring[]    @relation("MenteeRelation")
+  mentoringLogs    MentoringLog[]
+  referralsMade    Referral[]     @relation("ReferrerRelation")
+  referredAs       Referral?      @relation("ReferredRelation")
+  notifications    Notification[]
+  favorites        UserFavorite[]
+  shabbatTracking  ShabbatTracking[]
+  achievements     UserAchievement[]
+  auditLogs        AuditLog[]
+  createdContents  Content[]      @relation("ContentAuthor")
+  createdLessons   Lesson[]       @relation("LessonCreator")
+  rabbiLessons     Lesson[]       @relation("LessonRabbi")
+  organizedEvents  Event[]
+  headRegion       Region?        @relation("RegionHead")
+  headCity         City?          @relation("CityHead")
+  maleCoordCity    City?          @relation("MaleCoord")
+  femaleCoordCity  City?          @relation("FemaleCoord")
+
+  @@index([cityId, role, isActive])
+  @@index([email])
+  @@index([phone])
+}
+
+model Region {
+  id         String   @id @default(cuid())
+  name       String
+  headUserId String?  @unique
+  headUser   User?    @relation("RegionHead", fields: [headUserId], references: [id])
+  cities     City[]
+  createdAt  DateTime @default(now())
+}
+
+model City {
+  id            String   @id @default(cuid())
+  name          String
+  regionId      String?
+  region        Region?  @relation(fields: [regionId], references: [id])
+  headUserId    String?  @unique
+  headUser      User?    @relation("CityHead", fields: [headUserId], references: [id])
+  maleCoordId   String?  @unique
+  maleCoord     User?    @relation("MaleCoord", fields: [maleCoordId], references: [id])
+  femaleCoordId String?  @unique
+  femaleCoord   User?    @relation("FemaleCoord", fields: [femaleCoordId], references: [id])
+  lat           Float?
+  lng           Float?
+  population    Int?
+  targetMembers Int?
+  users         User[]
+  lessons       Lesson[]
+  events        Event[]
+  createdAt     DateTime @default(now())
+}
+
+model Mitzva {
+  id               String     @id @default(cuid())
+  name             String
+  slug             String     @unique
+  description      String
+  shortDescription String?
+  category         String
+  difficulty       Difficulty @default(EASY)
+  genderTarget     Gender?
+  iconUrl          String?
+  videoUrl         String?
+  steps            Json?
+  sortOrder        Int        @default(0)
+  isActive         Boolean    @default(true)
+  createdAt        DateTime   @default(now())
+  userMitzvot      UserMitzva[]
+}
+
+model UserMitzva {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mitzvaId      String
+  mitzva        Mitzva    @relation(fields: [mitzvaId], references: [id])
+  status        String    @default("started")
+  progressLevel Int       @default(0)
+  startedAt     DateTime  @default(now())
+  lastProgress  DateTime?
+  notes         String?
+
+  @@unique([userId, mitzvaId])
+}
+
+model Track {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique
+  description  String
+  genderTarget Gender?
+  difficulty   Difficulty @default(EASY)
+  durationDays Int?
+  stepsCount   Int        @default(0)
+  imageUrl     String?
+  isActive     Boolean    @default(true)
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  steps        TrackStep[]
+  userTracks   UserTrack[]
+}
+
+model TrackStep {
+  id              String @id @default(cuid())
+  trackId         String
+  track           Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  stepNumber      Int
+  title           String
+  description     String?
+  taskDescription String?
+  estimatedDays   Int?
+
+  @@unique([trackId, stepNumber])
+}
+
+model UserTrack {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackId     String
+  track       Track     @relation(fields: [trackId], references: [id])
+  currentStep Int       @default(1)
+  status      String    @default("active")
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, trackId])
+}
+
+model Lesson {
+  id           String      @id @default(cuid())
+  title        String
+  rabbiName    String
+  rabbiUserId  String?
+  rabbiUser    User?       @relation("LessonRabbi", fields: [rabbiUserId], references: [id])
+  topic        String
+  description  String?
+  cityId       String?
+  city         City?       @relation(fields: [cityId], references: [id])
+  neighborhood String?
+  address      String?
+  lat          Float?
+  lng          Float?
+  dayOfWeek    Int?
+  specificDate DateTime?
+  time         String?
+  endTime      String?
+  audience     Audience    @default(MIXED)
+  level        LessonLevel @default(ALL)
+  language     String      @default("he")
+  phone        String?
+  whatsapp     String?
+  notes        String?
+  imageUrl     String?
+  videoUrl     String?
+  isRecurring  Boolean     @default(true)
+  isActive     Boolean     @default(true)
+  approved     Boolean     @default(false)
+  createdById  String?
+  createdBy    User?       @relation("LessonCreator", fields: [createdById], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  registrations LessonRegistration[]
+
+  @@index([cityId, dayOfWeek, isActive])
+}
+
+model LessonRegistration {
+  id           String   @id @default(cuid())
+  lessonId     String
+  lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status       String   @default("registered")
+  registeredAt DateTime @default(now())
+
+  @@unique([lessonId, userId])
+}
+
+model Mentoring {
+  id           String         @id @default(cuid())
+  mentorId     String
+  mentor       User           @relation("MentorRelation", fields: [mentorId], references: [id])
+  menteeId     String
+  mentee       User           @relation("MenteeRelation", fields: [menteeId], references: [id])
+  status       String         @default("pending")
+  mitzvaFocus  String?
+  stage        MentoringStage @default(CONTACT_MADE)
+  startedAt    DateTime       @default(now())
+  lastContact  DateTime?
+  nextFollowup DateTime?
+  notes        String?
+  createdAt    DateTime       @default(now())
+  logs         MentoringLog[]
+
+  @@index([mentorId, status])
+  @@index([menteeId, status])
+}
+
+model MentoringLog {
+  id          String    @id @default(cuid())
+  mentoringId String
+  mentoring   Mentoring @relation(fields: [mentoringId], references: [id], onDelete: Cascade)
+  action      String
+  notes       String?
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+model Referral {
+  id             String   @id @default(cuid())
+  referrerId     String
+  referrer       User     @relation("ReferrerRelation", fields: [referrerId], references: [id])
+  referredName   String
+  referredPhone  String?
+  referredUserId String?  @unique
+  referredUser   User?    @relation("ReferredRelation", fields: [referredUserId], references: [id])
+  relationship   String?
+  status         String   @default("new")
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+model Content {
+  id             String      @id @default(cuid())
+  title          String
+  slug           String      @unique
+  type           ContentType
+  category       String
+  subcategory    String?
+  body           String?
+  excerpt        String?
+  author         String?
+  imageUrl       String?
+  videoUrl       String?
+  audioUrl       String?
+  genderTarget   Gender?
+  audienceLevel  LessonLevel @default(ALL)
+  tags           String[]    @default([])
+  seoTitle       String?
+  seoDescription String?
+  isPublished    Boolean     @default(false)
+  publishedAt    DateTime?
+  viewCount      Int         @default(0)
+  shareCount     Int         @default(0)
+  createdById    String?
+  createdBy      User?       @relation("ContentAuthor", fields: [createdById], references: [id])
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([category, isPublished, publishedAt])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  type        EventType
+  description String?
+  cityId      String?
+  city        City?     @relation(fields: [cityId], references: [id])
+  address     String?
+  lat         Float?
+  lng         Float?
+  date        DateTime
+  startTime   String?
+  endTime     String?
+  audience    Audience  @default(MIXED)
+  maxCapacity Int?
+  imageUrl    String?
+  organizerId String
+  organizer   User      @relation(fields: [organizerId], references: [id])
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id           String   @id @default(cuid())
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status       String   @default("registered")
+  registeredAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+}
+
+model Notification {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type   String
+  title  String
+  body   String?
+  link   String?
+  isRead Boolean  @default(false)
+  sentAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+model ShabbatTracking {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shabbatDate DateTime
+  kept        Boolean
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, shabbatDate])
+}
+
+model UserFavorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemType  String
+  itemId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemType, itemId])
+}
+
+model Achievement {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  iconUrl     String?
+  type        String
+  criteria    Json?
+  sortOrder   Int               @default(0)
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  earnedAt      DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  entityType String?
+  entityId   String?
+  details    Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
