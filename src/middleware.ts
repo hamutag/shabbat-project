@@ -18,11 +18,27 @@ const adminRoutes = ["/admin"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Get JWT token (doesn't require Prisma/DB)
-  const token = await getToken({
+  // Get JWT token - try both Auth.js v5 (authjs) and legacy (next-auth) cookie names
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  let token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+    secret,
+    cookieName: "__Secure-authjs.session-token",
   });
+
+  // Fallback: try without secure prefix (for non-HTTPS / development)
+  if (!token) {
+    token = await getToken({
+      req: request,
+      secret,
+      cookieName: "authjs.session-token",
+    });
+  }
+
+  // Fallback: try legacy next-auth cookie names
+  if (!token) {
+    token = await getToken({ req: request, secret });
+  }
 
   const isLoggedIn = !!token;
   const userRole = token?.role as string | undefined;
