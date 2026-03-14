@@ -49,7 +49,7 @@ export default function JoinContent() {
           ) : tracks.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tracks.map((track) => (
-                <Link key={track.slug} href={`/join/${track.slug}`} className="card group">
+                <Link key={track.slug} href={`/join?track=${track.slug}`} className="card group">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">{track.imageUrl || "📚"}</span>
                     <div>
@@ -86,7 +86,7 @@ export default function JoinContent() {
               {mitzvot.map((mitzva) => (
                 <Link
                   key={mitzva.slug}
-                  href={`/join/mitzva/${mitzva.slug}`}
+                  href={`/join?mitzva=${mitzva.slug}`}
                   className="card group py-4"
                 >
                   <div className="flex items-center gap-3">
