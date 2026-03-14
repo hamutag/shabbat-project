@@ -52,3 +52,5 @@ cookies*.txt
 
 # claude
 .claude/
+
+.vercel
