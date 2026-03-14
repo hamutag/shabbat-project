@@ -96,7 +96,7 @@ export default function LoginPage() {
                 <input type="checkbox" className="rounded" />
                 <span className="text-sm text-[var(--color-warm-gray)]">זכור אותי</span>
               </label>
-              <Link href="/forgot-password" className="text-sm text-[var(--color-gold)] hover:underline">
+              <Link href="/contact" className="text-sm text-[var(--color-gold)] hover:underline">
                 שכחתי סיסמה
               </Link>
             </div>

@@ -134,7 +134,7 @@ export default function ContentPageContent() {
         ) : items.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {items.map((item) => (
-              <Link key={item.id} href={`/content/article/${item.id}`} className="card group p-6">
+              <div key={item.id} className="card group p-6 cursor-pointer">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="badge badge-gold text-xs">
                     {item.category || "כללי"}
@@ -154,7 +154,7 @@ export default function ContentPageContent() {
                 <div className="flex items-center gap-3 mt-3 text-xs text-[var(--color-warm-gray)]">
                   {item.viewCount > 0 && <span>👁 {item.viewCount} צפיות</span>}
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         ) : (
@@ -218,7 +218,7 @@ export default function ContentPageContent() {
             "איך מתחילים להתחזק?",
             "האם אפשר להתחיל מדבר קטן?",
           ].map((q) => (
-            <Link key={q} href="/content/qa" className="card py-4 px-5 flex items-center justify-between group">
+            <Link key={q} href="/content?category=qa" className="card py-4 px-5 flex items-center justify-between group">
               <span className="font-medium text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors">
                 {q}
               </span>
