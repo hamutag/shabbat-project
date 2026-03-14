@@ -23,8 +23,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const identifier = credentials.identifier as string;
+        const rawIdentifier = credentials.identifier as string;
         const password = credentials.password as string;
+
+        // Normalize phone: remove dashes, spaces
+        const identifier = rawIdentifier.replace(/[-\s]/g, "");
 
         // Find user by phone or email
         const user = await prisma.user.findFirst({
@@ -32,6 +35,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             OR: [
               { phone: identifier },
               { email: identifier },
+              // Also try original input for email addresses with special chars
+              { email: rawIdentifier },
             ],
           },
         });

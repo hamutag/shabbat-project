@@ -30,8 +30,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError("טלפון/אימייל או סיסמה שגויים");
       } else {
-        router.push(callbackUrl);
-        router.refresh();
+        // Force full page navigation to ensure middleware re-evaluates
+        window.location.href = callbackUrl;
       }
     } catch {
       setError("שגיאה בהתחברות. אנא נסה שוב.");
