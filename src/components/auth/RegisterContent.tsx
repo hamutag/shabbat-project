@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -90,7 +91,7 @@ export default function RegisterContent() {
     <div className="min-h-screen gradient-light flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <span className="text-4xl mb-3 block">🕯️</span>
+          <Image src="/logo.png" alt="פרויקט השבת" width={80} height={80} className="mx-auto mb-3 w-20 h-20 object-contain" />
           <h1 className="text-3xl font-black text-[var(--color-blue-deep)] mb-2">
             הצטרף לפרויקט השבת
           </h1>
