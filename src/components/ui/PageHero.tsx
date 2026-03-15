@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { GradientOrbs } from "@/components/ui/GradientOrbs";
 
 interface PageHeroProps {
   title: string;
   subtitle?: string;
-  icon?: string;
+  icon?: string | ReactNode;
   gradient?: "gold" | "light" | "dark" | "rose";
 }
 
@@ -40,13 +41,21 @@ export function PageHero({
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="flex justify-center mb-4"
           >
-            <Image
-              src={`/icons/${icon}.png`}
-              alt={title}
-              width={64}
-              height={64}
-              className="w-16 h-16 object-contain"
-            />
+            {typeof icon === "string" ? (
+              <Image
+                src={`/icons/${icon}.png`}
+                alt={title}
+                width={64}
+                height={64}
+                className="w-16 h-16 object-contain"
+              />
+            ) : (
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${
+                isDark ? "bg-white/10 text-white" : "bg-[var(--color-gold)]/10 text-[var(--color-gold)]"
+              }`}>
+                {icon}
+              </div>
+            )}
           </motion.div>
         )}
 

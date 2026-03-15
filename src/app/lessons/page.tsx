@@ -8,21 +8,8 @@ export const metadata: Metadata = {
 
 export default function LessonsPage() {
   return (
-    <div className="gradient-light min-h-screen">
-      <section className="py-16 text-center">
-        <div className="container-main max-w-3xl">
-          <h1 className="text-4xl md:text-5xl font-black text-[var(--color-blue-deep)] mb-4">
-            שיעורי תורה
-          </h1>
-          <p className="text-xl text-[var(--color-warm-gray)]">
-            מצא שיעור תורה קרוב אליך — חינם
-          </p>
-        </div>
-      </section>
-
-      <div className="container-main pb-20">
-        <LessonsContent />
-      </div>
+    <div className="min-h-screen">
+      <LessonsContent />
     </div>
   );
 }
