@@ -7,7 +7,8 @@ import { useSession, signOut } from "next-auth/react";
 const NAV_LINKS = [
   { href: "/", label: "דף הבית" },
   { href: "/vision", label: "חזון" },
-  { href: "/how-it-works", label: "איך זה עובד" },
+  { href: "/shabbat", label: "השבת" },
+  { href: "/women", label: "מרכז לנשים" },
   { href: "/join", label: "קח על עצמך צעד" },
   { href: "/lessons", label: "שיעורי תורה" },
   { href: "/content", label: "מרכז תוכן" },

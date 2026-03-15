@@ -14,7 +14,16 @@ export default function DashboardContent() {
   const { data: dailyQuote } = trpc.content.dailyQuote.useQuery();
 
   const [shabbatLogged, setShabbatLogged] = useState(false);
+  const [mentorRequested, setMentorRequested] = useState(false);
   const utils = trpc.useUtils();
+
+  const requestMentor = trpc.mentoring.requestMentor.useMutation({
+    onSuccess: (data) => {
+      if (data.status === "created") {
+        setMentorRequested(true);
+      }
+    },
+  });
 
   const logShabbat = trpc.shabbat.log.useMutation({
     onSuccess: () => {
@@ -331,8 +340,23 @@ export default function DashboardContent() {
               ) : (
                 <div className="text-center py-4 text-[var(--color-warm-gray)]">
                   <span className="text-2xl block mb-2">🤝</span>
-                  <p className="text-sm">טרם שובצת למלווה</p>
-                  <p className="text-xs mt-1">בקרוב נשבץ לך מלווה אישי</p>
+                  {mentorRequested || requestMentor.data?.status === "already_exists" ? (
+                    <>
+                      <p className="text-sm font-medium text-green-600">הבקשה נשלחה בהצלחה!</p>
+                      <p className="text-xs mt-1">נשבץ לך מלווה אישי בהקדם</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm mb-3">רוצה מלווה אישי שילווה אותך במסע?</p>
+                      <button
+                        onClick={() => requestMentor.mutate({})}
+                        disabled={requestMentor.isPending}
+                        className="btn-primary text-sm py-2 px-6"
+                      >
+                        {requestMentor.isPending ? "שולח..." : "בקש מלווה אישי"}
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
