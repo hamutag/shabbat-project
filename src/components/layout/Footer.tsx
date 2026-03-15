@@ -23,8 +23,8 @@ const FOOTER_LINKS = {
     links: [
       { href: "/content", label: "מרכז תוכן" },
       { href: "/lessons", label: "שיעורי תורה" },
-      { href: "/content?category=stories", label: "סיפורי התחזקות" },
-      { href: "/content?category=qa", label: "שאלות ותשובות" },
+      { href: "/shabbat", label: "השבת" },
+      { href: "/women", label: "מרכז לנשים" },
     ],
   },
 };

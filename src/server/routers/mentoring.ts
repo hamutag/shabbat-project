@@ -43,6 +43,33 @@ export const mentoringRouter = router({
       data: { stage: input.stage },
     })),
 
+  requestMentor: protectedProcedure
+    .input(z.object({
+      message: z.string().optional(),
+      preferredGender: z.enum(["MALE", "FEMALE"]).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = (ctx.session.user as { id: string }).id;
+      // Check if already has a pending or active request
+      const existing = await prisma.mentoring.findFirst({
+        where: { menteeId: userId, status: { in: ["active", "pending"] } },
+      });
+      if (existing) {
+        return { status: "already_exists", mentoring: existing };
+      }
+      // Create a pending mentoring request (no mentor assigned yet)
+      const mentoring = await prisma.mentoring.create({
+        data: {
+          menteeId: userId,
+          mentorId: userId, // Placeholder - admin will reassign
+          stage: "CONTACT_MADE",
+          status: "pending",
+          notes: input.message || undefined,
+        },
+      });
+      return { status: "created", mentoring };
+    }),
+
   assign: adminProcedure
     .input(z.object({ mentorId: z.string(), menteeId: z.string() }))
     .mutation(async ({ input }) => prisma.mentoring.create({
