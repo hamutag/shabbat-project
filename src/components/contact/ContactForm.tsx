@@ -1,6 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Send,
+  Check,
+  AlertCircle,
+  User,
+  Phone,
+  Mail,
+  MessageSquare,
+  Loader2,
+  RefreshCw,
+} from "lucide-react";
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -62,39 +74,63 @@ export default function ContactForm() {
 
   if (success) {
     return (
-      <div className="card p-8 text-center">
-        <span className="text-5xl block mb-4">✅</span>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="card p-8 text-center backdrop-blur-lg bg-white/80 border border-white/40"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+          className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4"
+        >
+          <Check className="w-8 h-8 text-green-600" />
+        </motion.div>
         <h2 className="text-xl font-bold text-[var(--color-blue-deep)] mb-2">
           ההודעה נשלחה בהצלחה!
         </h2>
         <p className="text-[var(--color-warm-gray)] mb-6">
           תודה על פנייתך. נחזור אליך בהקדם האפשרי.
         </p>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => setSuccess(false)}
-          className="btn-primary px-6 py-2"
+          className="btn-primary px-6 py-2 inline-flex items-center gap-2"
         >
+          <RefreshCw className="w-4 h-4" />
           שלח הודעה נוספת
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     );
   }
 
   return (
-    <div className="card p-8">
-      <h2 className="text-xl font-bold text-[var(--color-blue-deep)] mb-6">
+    <div className="card p-8 backdrop-blur-lg bg-white/80 border border-white/40">
+      <h2 className="text-xl font-bold text-[var(--color-blue-deep)] mb-6 flex items-center gap-2">
+        <MessageSquare className="w-5 h-5 text-[var(--color-gold)]" />
         שלח לנו הודעה
       </h2>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
-          {error}
-        </div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm flex items-center gap-2"
+          >
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1">
+          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1 flex items-center gap-1">
+            <User className="w-3.5 h-3.5" />
             שם מלא *
           </label>
           <input
@@ -107,7 +143,8 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1">
+          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1 flex items-center gap-1">
+            <Phone className="w-3.5 h-3.5" />
             טלפון *
           </label>
           <input
@@ -122,7 +159,8 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1">
+          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1 flex items-center gap-1">
+            <Mail className="w-3.5 h-3.5" />
             אימייל
           </label>
           <input
@@ -154,7 +192,8 @@ export default function ContactForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1">
+          <label className="block text-sm font-medium text-[var(--color-blue-deep)] mb-1 flex items-center gap-1">
+            <MessageSquare className="w-3.5 h-3.5" />
             הודעה *
           </label>
           <textarea
@@ -165,13 +204,25 @@ export default function ContactForm() {
             required
           />
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
           type="submit"
           disabled={loading}
-          className="btn-primary w-full py-3 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="btn-primary w-full py-3 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          {loading ? "שולח..." : "שלח הודעה"}
-        </button>
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              שולח...
+            </>
+          ) : (
+            <>
+              <Send className="w-4 h-4" />
+              שלח הודעה
+            </>
+          )}
+        </motion.button>
       </form>
     </div>
   );
