@@ -1,11 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const TRACKS = [
   {
     slug: "shabbat-beginners",
     name: "שבת למתחילים",
     desc: "מדריך צעד אחר צעד לשמירת שבת ראשונה",
-    icon: "🕯️",
+    icon: "candles",
     steps: 7,
     difficulty: "קל",
   },
@@ -13,7 +14,7 @@ const TRACKS = [
     slug: "emunah",
     name: "אמונה וביטחון",
     desc: "מסלול לחיזוק האמונה והביטחון בחיי היומיום",
-    icon: "💫",
+    icon: "star-hands",
     steps: 10,
     difficulty: "קל",
   },
@@ -21,7 +22,7 @@ const TRACKS = [
     slug: "tefillin",
     name: "תפילין",
     desc: "למד להניח תפילין ולהפוך את זה להרגל יומי",
-    icon: "📿",
+    icon: "kippah-star",
     steps: 5,
     difficulty: "קל",
   },
@@ -29,7 +30,7 @@ const TRACKS = [
     slug: "women-track",
     name: "מסלול לנשים",
     desc: "הדלקת נרות, הפרשת חלה, ועוד - מסלול מיוחד",
-    icon: "✨",
+    icon: "candle-holder",
     steps: 8,
     difficulty: "קל",
   },
@@ -37,7 +38,7 @@ const TRACKS = [
     slug: "brachot",
     name: "ברכות ונטילת ידיים",
     desc: "התחל עם ברכות הנהנין ונטילת ידיים",
-    icon: "🙏",
+    icon: "hand-kiddush",
     steps: 6,
     difficulty: "קל",
   },
@@ -45,7 +46,7 @@ const TRACKS = [
     slug: "two-shabbatot",
     name: "שתי שבתות",
     desc: "המסלול המרכזי - שתי שבתות רצופות של קדושה",
-    icon: "🌟",
+    icon: "star-david",
     steps: 14,
     difficulty: "בינוני",
   },
@@ -68,7 +69,9 @@ export function PopularTracks() {
               className="card group"
             >
               <div className="flex items-start gap-4">
-                <div className="text-3xl">{track.icon}</div>
+                <div className="flex-shrink-0">
+                  <Image src={`/icons/${track.icon}.png`} alt={track.name} width={40} height={40} className="w-10 h-10 object-contain" />
+                </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors mb-1">
                     {track.name}

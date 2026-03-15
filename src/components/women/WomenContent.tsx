@@ -1,41 +1,42 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { trpc } from "@/lib/trpc";
 
 const WOMEN_TOPICS = [
   {
-    icon: "🕯️",
+    icon: "candles",
     title: "הדלקת נרות שבת",
     description: "הדלקת הנרות היא מצווה מיוחדת לנשים שמכניסה אור וקדושה לבית",
     link: "/join?mitzva=hadlakat-nerot",
   },
   {
-    icon: "🍞",
+    icon: "challah-braid",
     title: "הפרשת חלה",
     description: "מצוות הפרשת חלה - סגולה עצומה לפרנסה, בריאות וילדים",
     link: "/join?mitzva=hafrashat-challah",
   },
   {
-    icon: "🌊",
+    icon: "star-circle",
     title: "טהרת המשפחה",
     description: "טהרת המשפחה היא יסוד הבית היהודי ומקור הברכה",
     link: "/join?mitzva=tahara",
   },
   {
-    icon: "🏡",
+    icon: "synagogue",
     title: "שלום בית",
     description: "שלום בית הוא הכלי לכל הברכות. טיפים ותכנים לחיזוק",
     link: "/join?mitzva=shalom-bayit",
   },
   {
-    icon: "🙏",
+    icon: "hands-light",
     title: "תפילה",
     description: "תפילת האישה היא עמוד התווך של הבית. למדי להתפלל בפשטות",
     link: "/join?mitzva=tefilla",
   },
   {
-    icon: "📿",
+    icon: "crown",
     title: "צניעות",
     description: "צניעות היא כתר של כבוד. גלי את הכוח הפנימי שלך",
     link: "/join?mitzva=tzniut",
@@ -44,19 +45,30 @@ const WOMEN_TOPICS = [
 
 const WOMEN_TRACKS = [
   {
-    icon: "✨",
+    icon: "candle-holder",
     title: "מסלול לנשים",
     description: "מסלול מותאם במיוחד לנשים - הדלקת נרות, הפרשת חלה ועוד",
     slug: "women-track",
     steps: 8,
   },
   {
-    icon: "🕯️",
+    icon: "candles",
     title: "שבת למתחילות",
     description: "איך לשמור שבת ראשונה - מדריך צעד אחר צעד",
     slug: "shabbat-beginners",
     steps: 7,
   },
+];
+
+const CONTENT_LINKS = [
+  { href: "/content?category=shabbat", label: "שבת", icon: "candles" },
+  { href: "/content?category=tahara", label: "טהרה", icon: "star-circle" },
+  { href: "/content?category=shalom-bayit", label: "שלום בית", icon: "synagogue" },
+  { href: "/content?category=family", label: "בית יהודי", icon: "community" },
+  { href: "/content?category=emunah", label: "אמונה", icon: "star-hands" },
+  { href: "/content?category=tefilla", label: "תפילה", icon: "hands-light" },
+  { href: "/content?category=challah", label: "חלה", icon: "challah-plate" },
+  { href: "/content?category=stories", label: "סיפורים", icon: "open-torah" },
 ];
 
 const INSPIRATION = [
@@ -82,7 +94,9 @@ export default function WomenContent() {
       {/* Hero */}
       <section className="py-16 md:py-24 text-center">
         <div className="container-main max-w-3xl">
-          <span className="text-5xl block mb-4">👩</span>
+          <div className="flex justify-center mb-4">
+            <Image src="/icons/candle-holder.png" alt="מרכז לנשים" width={64} height={64} className="w-16 h-16 object-contain" />
+          </div>
           <h1 className="text-4xl md:text-5xl font-black text-[var(--color-blue-deep)] mb-4">
             מרכז חיזוק לנשים
           </h1>
@@ -107,7 +121,9 @@ export default function WomenContent() {
                 href={topic.link}
                 className="card group p-6 text-center hover:shadow-lg transition-all"
               >
-                <span className="text-4xl block mb-3">{topic.icon}</span>
+                <div className="flex justify-center mb-3">
+                  <Image src={`/icons/${topic.icon}.png`} alt={topic.title} width={48} height={48} className="w-12 h-12 object-contain" />
+                </div>
                 <h3 className="text-lg font-bold text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors mb-2">
                   {topic.title}
                 </h3>
@@ -132,7 +148,9 @@ export default function WomenContent() {
                 className="card group p-6"
               >
                 <div className="flex items-start gap-4">
-                  <span className="text-3xl">{track.icon}</span>
+                  <div className="flex-shrink-0">
+                    <Image src={`/icons/${track.icon}.png`} alt={track.title} width={40} height={40} className="w-10 h-10 object-contain" />
+                  </div>
                   <div>
                     <h3 className="font-bold text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors">
                       {track.title}
@@ -157,10 +175,7 @@ export default function WomenContent() {
           </h2>
           <div className="space-y-4 max-w-2xl mx-auto">
             {INSPIRATION.map((item, i) => (
-              <div
-                key={i}
-                className="quote-box"
-              >
+              <div key={i} className="quote-box">
                 <p className="text-lg leading-relaxed">{item.quote}</p>
                 <p className="text-xs mt-2 text-[var(--color-gold)] opacity-70">
                   — {item.source}
@@ -193,22 +208,15 @@ export default function WomenContent() {
             תכנים לנשים
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto">
-            {[
-              { href: "/content?category=shabbat", label: "שבת", icon: "🕯️" },
-              { href: "/content?category=tahara", label: "טהרה", icon: "🌊" },
-              { href: "/content?category=shalom-bayit", label: "שלום בית", icon: "🏡" },
-              { href: "/content?category=family", label: "בית יהודי", icon: "👨‍👩‍👧‍👦" },
-              { href: "/content?category=emunah", label: "אמונה", icon: "💫" },
-              { href: "/content?category=tefilla", label: "תפילה", icon: "🙏" },
-              { href: "/content?category=challah", label: "חלה", icon: "🍞" },
-              { href: "/content?category=stories", label: "סיפורים", icon: "📖" },
-            ].map((item) => (
+            {CONTENT_LINKS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className="card py-4 text-center group hover:shadow-md transition-all"
               >
-                <span className="text-2xl block mb-1">{item.icon}</span>
+                <div className="flex justify-center mb-1">
+                  <Image src={`/icons/${item.icon}.png`} alt={item.label} width={32} height={32} className="w-8 h-8 object-contain" />
+                </div>
                 <span className="text-sm font-medium text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors">
                   {item.label}
                 </span>
@@ -220,7 +228,9 @@ export default function WomenContent() {
         {/* Lessons for Women */}
         <section className="mb-16">
           <div className="card max-w-2xl mx-auto p-8 bg-[var(--color-cream)] text-center">
-            <span className="text-3xl mb-3 block">📖</span>
+            <div className="flex justify-center mb-3">
+              <Image src="/icons/open-torah.png" alt="שיעורי תורה" width={48} height={48} className="w-12 h-12 object-contain" />
+            </div>
             <h3 className="text-xl font-bold text-[var(--color-blue-deep)] mb-2">
               שיעורי תורה לנשים
             </h3>

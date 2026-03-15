@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const FOOTER_LINKS = {
   about: {
@@ -37,9 +38,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-full gradient-gold flex items-center justify-center text-lg">
-                🕯️
-              </div>
+              <Image src="/logo.png" alt="פרויקט השבת" width={40} height={40} className="w-10 h-10 object-contain" />
               <div>
                 <h3 className="text-lg font-bold">פרויקט השבת</h3>
                 <p className="text-xs text-[var(--color-gold-light)]">

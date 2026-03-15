@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { trpc } from "@/lib/trpc";
 
 const SHABBAT_STEPS = [
@@ -9,79 +10,79 @@ const SHABBAT_STEPS = [
     title: "הדלקת נרות",
     time: "18 דקות לפני השקיעה",
     description: "האישה מדליקה שני נרות (או יותר), מכסה את העיניים, מברכת ומתפללת",
-    icon: "🕯️",
+    icon: "candles",
   },
   {
     step: 2,
     title: "קבלת שבת",
     time: "עם השקיעה",
     description: "תפילת קבלת שבת בבית הכנסת או בבית. שירת 'לכה דודי' ו'מזמור שיר ליום השבת'",
-    icon: "🙏",
+    icon: "synagogue",
   },
   {
     step: 3,
     title: "קידוש",
     time: "אחרי תפילת ערבית",
     description: "קידוש על היין, ברכת המזון על שני חלות, סעודת שבת משפחתית",
-    icon: "🍷",
+    icon: "kiddush-cup",
   },
   {
     step: 4,
     title: "סעודות שבת",
     time: "שלוש סעודות",
     description: "סעודת ליל שבת, סעודת שבת בבוקר, וסעודה שלישית לפני צאת שבת",
-    icon: "🍽️",
+    icon: "shabbat-table",
   },
   {
     step: 5,
     title: "מנוחה וקדושה",
     time: "כל יום השבת",
     description: "מנוחה ממלאכות, זמן למשפחה, תורה, תפילה, שינה ושמחה",
-    icon: "😌",
+    icon: "crown",
   },
   {
     step: 6,
     title: "הבדלה",
     time: "צאת השבת",
     description: "הבדלה על יין, בשמים ונר. מפרידים בין קודש לחול ומתחילים שבוע חדש באור",
-    icon: "🌟",
+    icon: "havdalah",
   },
 ];
 
 const SHABBAT_DONT = [
-  { icon: "🔥", text: "הדלקת אש ובישול" },
-  { icon: "💡", text: "הדלקה וכיבוי חשמל" },
-  { icon: "📱", text: "שימוש בטלפון ומחשב" },
-  { icon: "🚗", text: "נסיעה ברכב" },
-  { icon: "✍️", text: "כתיבה" },
-  { icon: "🛒", text: "קנייה ומכירה" },
+  { icon: "candle-single", text: "הדלקת אש ובישול" },
+  { icon: "oil-lamp", text: "הדלקה וכיבוי חשמל" },
+  { icon: "clock", text: "שימוש בטלפון ומחשב" },
+  { icon: "key", text: "נסיעה ברכב" },
+  { icon: "torah-scroll", text: "כתיבה" },
+  { icon: "tzedakah-box", text: "קנייה ומכירה" },
 ];
 
 const BEGINNER_TIPS = [
   {
     title: "התחל מדבר אחד",
     description: "לא חייב הכל בבת אחת. תבחר דבר אחד - הדלקת נרות, קידוש, או סעודה משפחתית",
-    icon: "1️⃣",
+    icon: "step-badge",
   },
   {
     title: "הכן מראש",
     description: "הכנות לשבת ביום שישי: בישול, ניקיון, הכנת בגדים חגיגיים",
-    icon: "📋",
+    icon: "challah-plate",
   },
   {
     title: "צור אווירה",
     description: "מפה לבנה, כלים יפים, אוכל טעים, שירים - השבת היא חוויה",
-    icon: "✨",
+    icon: "shabbat-cover",
   },
   {
     title: "הזמן אורחים",
     description: "שבת היא זמן של חיבור. הזמן חברים או משפחה לסעודה",
-    icon: "👥",
+    icon: "community",
   },
   {
     title: "אל תלחץ על עצמך",
     description: "כל צעד נחשב. אפילו שמירה חלקית מביאה אור עצום",
-    icon: "💛",
+    icon: "hands-light",
   },
 ];
 
@@ -93,7 +94,9 @@ export default function ShabbatContent() {
       {/* Hero */}
       <section className="py-16 md:py-24 text-center">
         <div className="container-main max-w-3xl">
-          <span className="text-5xl block mb-4">🕯️</span>
+          <div className="flex justify-center mb-4">
+            <Image src="/icons/candles.png" alt="נרות שבת" width={64} height={64} className="w-16 h-16 object-contain" />
+          </div>
           <h1 className="text-4xl md:text-5xl font-black text-[var(--color-blue-deep)] mb-4">
             קדושת השבת
           </h1>
@@ -123,10 +126,8 @@ export default function ShabbatContent() {
             <div className="space-y-4">
               {SHABBAT_STEPS.map((step) => (
                 <div key={step.step} className="card p-5 flex items-start gap-4">
-                  <div className="flex flex-col items-center">
-                    <span className="w-10 h-10 rounded-full gradient-gold text-white flex items-center justify-center text-lg font-bold">
-                      {step.icon}
-                    </span>
+                  <div className="flex flex-col items-center flex-shrink-0">
+                    <Image src={`/icons/${step.icon}.png`} alt={step.title} width={40} height={40} className="w-10 h-10 object-contain" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-1">
@@ -156,7 +157,9 @@ export default function ShabbatContent() {
                 key={item.text}
                 className="card py-4 px-5 text-center"
               >
-                <span className="text-2xl block mb-2">{item.icon}</span>
+                <div className="flex justify-center mb-2">
+                  <Image src={`/icons/${item.icon}.png`} alt={item.text} width={32} height={32} className="w-8 h-8 object-contain" />
+                </div>
                 <span className="text-sm font-medium text-[var(--color-blue-deep)]">
                   {item.text}
                 </span>
@@ -176,7 +179,9 @@ export default function ShabbatContent() {
           <div className="space-y-3 max-w-2xl mx-auto">
             {BEGINNER_TIPS.map((tip) => (
               <div key={tip.title} className="card p-5 flex items-start gap-4">
-                <span className="text-2xl">{tip.icon}</span>
+                <div className="flex-shrink-0">
+                  <Image src={`/icons/${tip.icon}.png`} alt={tip.title} width={36} height={36} className="w-9 h-9 object-contain" />
+                </div>
                 <div>
                   <h3 className="font-bold text-[var(--color-blue-deep)] mb-1">
                     {tip.title}
@@ -193,7 +198,9 @@ export default function ShabbatContent() {
         {/* Shabbat Track */}
         <section className="mb-16">
           <div className="card max-w-2xl mx-auto p-8 bg-[var(--color-cream)] text-center">
-            <span className="text-3xl mb-3 block">🛤️</span>
+            <div className="flex justify-center mb-3">
+              <Image src="/icons/golden-gate.png" alt="מסלול שבת" width={48} height={48} className="w-12 h-12 object-contain" />
+            </div>
             <h3 className="text-xl font-bold text-[var(--color-blue-deep)] mb-2">
               מסלול שבת למתחילים
             </h3>

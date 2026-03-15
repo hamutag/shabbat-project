@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function HeroSection() {
@@ -23,9 +24,9 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          className="text-6xl mb-6"
+          className="mb-6"
         >
-          🕯️
+          <Image src="/logo.png" alt="פרויקט השבת" width={120} height={120} className="mx-auto w-28 h-28 md:w-36 md:h-36 object-contain" priority />
         </motion.div>
 
         {/* Title */}

@@ -1,21 +1,23 @@
+import Image from "next/image";
+
 const VALUES = [
   {
-    icon: "🕯️",
+    icon: "candles",
     title: "בחר מצווה אחת",
     desc: "בחר צעד רוחני שמתאים לך",
   },
   {
-    icon: "🤝",
+    icon: "handshake",
     title: "קבל ליווי אישי",
     desc: "מלווה שילווה אותך באהבה",
   },
   {
-    icon: "📖",
+    icon: "book-open",
     title: "מצא שיעור קרוב",
     desc: "שיעורי תורה בכל הארץ",
   },
   {
-    icon: "🚶",
+    icon: "footsteps",
     title: "התקדם בקצב שלך",
     desc: "ללא לחץ, ללא כפייה",
   },
@@ -28,7 +30,9 @@ export function ValueBar() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {VALUES.map((item) => (
             <div key={item.title} className="text-center">
-              <div className="text-3xl mb-2">{item.icon}</div>
+              <div className="flex justify-center mb-2">
+                <Image src={`/icons/${item.icon}.png`} alt={item.title} width={48} height={48} className="w-12 h-12 object-contain" />
+              </div>
               <h3 className="font-bold text-[var(--color-blue-deep)] mb-1">
                 {item.title}
               </h3>
