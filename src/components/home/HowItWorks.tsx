@@ -1,3 +1,9 @@
+"use client";
+
+import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import { GradientOrbs } from "@/components/ui/GradientOrbs";
+
 const STEPS = [
   {
     number: "01",
@@ -18,35 +24,44 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="py-20 gradient-light">
-      <div className="container-main">
-        <h2 className="section-title">איך זה עובד?</h2>
-        <p className="section-subtitle">
-          שלושה צעדים פשוטים שמשנים הכל
-        </p>
+    <section className="py-20 gradient-light relative overflow-hidden">
+      <GradientOrbs variant="light" />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+      <div className="container-main relative">
+        <AnimatedSection variant="fadeUp">
+          <h2 className="section-title">איך זה עובד?</h2>
+          <p className="section-subtitle">
+            שלושה צעדים פשוטים שמשנים הכל
+          </p>
+        </AnimatedSection>
+
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto" stagger={0.15}>
           {STEPS.map((step, i) => (
-            <div key={step.number} className="text-center relative">
-              {/* Step number */}
-              <div className="w-16 h-16 rounded-full gradient-gold flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
-                {step.number}
+            <StaggerItem key={step.number}>
+              <div className="text-center relative group">
+                {/* Step number circle */}
+                <div
+                  className="rounded-full gradient-gold flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-md ring-4 ring-[var(--color-gold-light)]/30 transition-transform duration-300 group-hover:scale-110"
+                  style={{ width: "72px", height: "72px" }}
+                >
+                  {step.number}
+                </div>
+
+                {/* Connector line */}
+                {i < STEPS.length - 1 && (
+                  <div className="hidden md:block absolute top-9 right-0 w-full h-[2px] bg-gradient-to-l from-[var(--color-gold-light)] to-[var(--color-gold-light)]/20 -z-10" />
+                )}
+
+                <h3 className="text-lg font-bold text-[var(--color-blue-deep)] mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[var(--color-warm-gray)] leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
-
-              {/* Connector line (not on last) */}
-              {i < STEPS.length - 1 && (
-                <div className="hidden md:block absolute top-8 right-0 w-full h-[2px] bg-[var(--color-gold-light)] -z-10" />
-              )}
-
-              <h3 className="text-lg font-bold text-[var(--color-blue-deep)] mb-2">
-                {step.title}
-              </h3>
-              <p className="text-sm text-[var(--color-warm-gray)] leading-relaxed">
-                {step.desc}
-              </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

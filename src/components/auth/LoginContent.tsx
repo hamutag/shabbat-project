@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { GradientOrbs } from "@/components/ui/GradientOrbs";
 
 export default function LoginContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
@@ -31,7 +32,6 @@ export default function LoginContent() {
       if (result?.error) {
         setError("טלפון/אימייל או סיסמה שגויים");
       } else {
-        // Force full page navigation to ensure middleware re-evaluates
         window.location.href = callbackUrl;
       }
     } catch {
@@ -42,10 +42,23 @@ export default function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen gradient-light flex items-center justify-center py-12 px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen gradient-light flex items-center justify-center py-12 px-4 relative overflow-hidden">
+      <GradientOrbs variant="gold" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md relative"
+      >
         <div className="text-center mb-8">
-          <Image src="/logo.png" alt="פרויקט השבת" width={80} height={80} className="mx-auto mb-3 w-20 h-20 object-contain" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Image src="/logo.png" alt="פרויקט השבת" width={80} height={80} className="mx-auto mb-3 w-20 h-20 object-contain" />
+          </motion.div>
           <h1 className="text-3xl font-black text-[var(--color-blue-deep)] mb-2">
             ברוך שובך
           </h1>
@@ -54,12 +67,19 @@ export default function LoginContent() {
           </p>
         </div>
 
-        <div className="card p-8">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
-              {error}
-            </div>
-          )}
+        <div className="card p-8 shadow-lg backdrop-blur-lg bg-white/80 border border-white/40">
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -8, height: 0 }}
+                className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -107,7 +127,14 @@ export default function LoginContent() {
               disabled={loading}
               className="btn-primary w-full py-3 text-lg mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? "מתחבר..." : "התחבר"}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  מתחבר...
+                </span>
+              ) : (
+                "התחבר"
+              )}
             </button>
           </form>
         </div>
@@ -118,7 +145,7 @@ export default function LoginContent() {
             הצטרף עכשיו
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

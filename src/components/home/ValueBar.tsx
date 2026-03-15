@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
 
 const VALUES = [
   {
@@ -25,23 +28,33 @@ const VALUES = [
 
 export function ValueBar() {
   return (
-    <section className="py-12 bg-white border-y border-gray-100">
+    <section className="py-14 bg-white/80 backdrop-blur-sm border-y border-gray-100/50">
       <div className="container-main">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {VALUES.map((item) => (
-            <div key={item.title} className="text-center">
-              <div className="flex justify-center mb-2">
-                <Image src={`/icons/${item.icon}.png`} alt={item.title} width={48} height={48} className="w-12 h-12 object-contain" />
+            <StaggerItem key={item.title}>
+              <div className="text-center group">
+                <div className="flex justify-center mb-3">
+                  <div className="w-16 h-16 rounded-2xl bg-[var(--color-gold-light)]/30 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                      src={`/icons/${item.icon}.png`}
+                      alt={item.title}
+                      width={48}
+                      height={48}
+                      className="w-10 h-10 object-contain"
+                    />
+                  </div>
+                </div>
+                <h3 className="font-bold text-[var(--color-blue-deep)] mb-1 group-hover:text-[var(--color-gold)] transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-[var(--color-warm-gray)]">
+                  {item.desc}
+                </p>
               </div>
-              <h3 className="font-bold text-[var(--color-blue-deep)] mb-1">
-                {item.title}
-              </h3>
-              <p className="text-sm text-[var(--color-warm-gray)]">
-                {item.desc}
-              </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

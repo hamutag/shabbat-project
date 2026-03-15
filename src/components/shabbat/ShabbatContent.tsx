@@ -3,6 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { trpc } from "@/lib/trpc";
+import { PageHero } from "@/components/ui/PageHero";
+import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
 
 const SHABBAT_STEPS = [
   {
@@ -90,21 +93,17 @@ export default function ShabbatContent() {
   const { data: dailyQuote } = trpc.content.dailyQuote.useQuery();
 
   return (
-    <div className="gradient-light min-h-screen">
-      {/* Hero */}
-      <section className="py-16 md:py-24 text-center">
-        <div className="container-main max-w-3xl">
-          <div className="flex justify-center mb-4">
-            <Image src="/icons/candles.png" alt="נרות שבת" width={64} height={64} className="w-16 h-16 object-contain" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-[var(--color-blue-deep)] mb-4">
-            קדושת השבת
-          </h1>
-          <p className="text-xl text-[var(--color-warm-gray)] leading-relaxed mb-6">
-            השבת היא הלב של עם ישראל.
-            <br />
-            מקור הברכה, המנוחה והקדושה.
-          </p>
+    <div className="min-h-screen">
+      <PageHero
+        title="קדושת השבת"
+        subtitle="השבת היא הלב של עם ישראל. מקור הברכה, המנוחה והקדושה."
+        icon="candles"
+        gradient="light"
+      />
+
+      <div className="container-main pb-20">
+        {/* Quote */}
+        <AnimatedSection variant="scaleUp" className="mb-16 -mt-8">
           <div className="quote-box max-w-xl mx-auto">
             <p className="text-lg">
               אם ישראל שומרים שתי שבתות כהלכתן — מיד נגאלין
@@ -113,90 +112,109 @@ export default function ShabbatContent() {
               — מסכת שבת קי&quot;ח
             </p>
           </div>
-        </div>
-      </section>
+        </AnimatedSection>
 
-      <div className="container-main pb-20">
         {/* How Shabbat Works */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-8 text-center">
-            מהלך השבת
-          </h2>
+          <AnimatedSection variant="fadeUp">
+            <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-8 text-center">
+              מהלך השבת
+            </h2>
+          </AnimatedSection>
+
           <div className="max-w-3xl mx-auto">
-            <div className="space-y-4">
+            <StaggerContainer className="space-y-4" stagger={0.08}>
               {SHABBAT_STEPS.map((step) => (
-                <div key={step.step} className="card p-5 flex items-start gap-4">
-                  <div className="flex flex-col items-center flex-shrink-0">
-                    <Image src={`/icons/${step.icon}.png`} alt={step.title} width={40} height={40} className="w-10 h-10 object-contain" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-bold text-[var(--color-blue-deep)]">
-                        {step.title}
-                      </h3>
-                      <span className="badge badge-blue text-xs">{step.time}</span>
+                <StaggerItem key={step.step}>
+                  <div className="card p-5 flex items-start gap-4 group">
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-[var(--color-gold-light)]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                        <Image src={`/icons/${step.icon}.png`} alt={step.title} width={40} height={40} className="w-8 h-8 object-contain" />
+                      </div>
                     </div>
-                    <p className="text-sm text-[var(--color-warm-gray)]">
-                      {step.description}
-                    </p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <h3 className="font-bold text-[var(--color-blue-deep)] group-hover:text-[var(--color-gold)] transition-colors">
+                          {step.title}
+                        </h3>
+                        <span className="badge badge-blue text-xs">{step.time}</span>
+                      </div>
+                      <p className="text-sm text-[var(--color-warm-gray)] leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </section>
 
         {/* What Not to Do */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
-            מלאכות שנמנעים מהן בשבת
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
+          <AnimatedSection variant="fadeUp">
+            <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
+              מלאכות שנמנעים מהן בשבת
+            </h2>
+          </AnimatedSection>
+
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto" stagger={0.06}>
             {SHABBAT_DONT.map((item) => (
-              <div
-                key={item.text}
-                className="card py-4 px-5 text-center"
-              >
-                <div className="flex justify-center mb-2">
-                  <Image src={`/icons/${item.icon}.png`} alt={item.text} width={32} height={32} className="w-8 h-8 object-contain" />
+              <StaggerItem key={item.text}>
+                <div className="card py-4 px-5 text-center group">
+                  <div className="flex justify-center mb-2">
+                    <div className="transition-transform duration-300 group-hover:scale-110">
+                      <Image src={`/icons/${item.icon}.png`} alt={item.text} width={32} height={32} className="w-8 h-8 object-contain" />
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-[var(--color-blue-deep)]">
+                    {item.text}
+                  </span>
                 </div>
-                <span className="text-sm font-medium text-[var(--color-blue-deep)]">
-                  {item.text}
-                </span>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
-          <p className="text-center text-sm text-[var(--color-warm-gray)] mt-4 max-w-md mx-auto">
-            יש 39 מלאכות ותולדותיהן. מומלץ ללמוד בהדרגה עם רב או מלווה אישי.
-          </p>
+          </StaggerContainer>
+
+          <AnimatedSection variant="fadeIn" delay={0.3}>
+            <p className="text-center text-sm text-[var(--color-warm-gray)] mt-4 max-w-md mx-auto">
+              יש 39 מלאכות ותולדותיהן. מומלץ ללמוד בהדרגה עם רב או מלווה אישי.
+            </p>
+          </AnimatedSection>
         </section>
 
         {/* Tips for Beginners */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
-            טיפים למתחילים
-          </h2>
-          <div className="space-y-3 max-w-2xl mx-auto">
+          <AnimatedSection variant="fadeUp">
+            <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
+              טיפים למתחילים
+            </h2>
+          </AnimatedSection>
+
+          <StaggerContainer className="space-y-3 max-w-2xl mx-auto" stagger={0.08}>
             {BEGINNER_TIPS.map((tip) => (
-              <div key={tip.title} className="card p-5 flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <Image src={`/icons/${tip.icon}.png`} alt={tip.title} width={36} height={36} className="w-9 h-9 object-contain" />
+              <StaggerItem key={tip.title}>
+                <div className="card p-5 flex items-start gap-4 group">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--color-cream)] flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                      <Image src={`/icons/${tip.icon}.png`} alt={tip.title} width={36} height={36} className="w-8 h-8 object-contain" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[var(--color-blue-deep)] mb-1 group-hover:text-[var(--color-gold)] transition-colors">
+                      {tip.title}
+                    </h3>
+                    <p className="text-sm text-[var(--color-warm-gray)] leading-relaxed">
+                      {tip.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-[var(--color-blue-deep)] mb-1">
-                    {tip.title}
-                  </h3>
-                  <p className="text-sm text-[var(--color-warm-gray)]">
-                    {tip.description}
-                  </p>
-                </div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </section>
 
-        {/* Shabbat Track */}
-        <section className="mb-16">
+        {/* Shabbat Track CTA */}
+        <AnimatedSection variant="scaleUp" className="mb-16">
           <div className="card max-w-2xl mx-auto p-8 bg-[var(--color-cream)] text-center">
             <div className="flex justify-center mb-3">
               <Image src="/icons/golden-gate.png" alt="מסלול שבת" width={48} height={48} className="w-12 h-12 object-contain" />
@@ -211,36 +229,41 @@ export default function ShabbatContent() {
               התחל את המסלול
             </Link>
           </div>
-        </section>
+        </AnimatedSection>
 
         {/* Q&A */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
-            שאלות נפוצות
-          </h2>
-          <div className="space-y-3 max-w-2xl mx-auto">
+          <AnimatedSection variant="fadeUp">
+            <h2 className="text-2xl font-bold text-[var(--color-blue-deep)] mb-6 text-center">
+              שאלות נפוצות
+            </h2>
+          </AnimatedSection>
+
+          <StaggerContainer className="space-y-3 max-w-2xl mx-auto" stagger={0.06}>
             {[
               { q: "מתי מתחילה ומסתיימת השבת?", a: "השבת מתחילה בערב שישי 18 דקות לפני השקיעה ומסתיימת במוצאי שבת עם צאת הכוכבים (כ-40 דקות אחרי השקיעה)." },
               { q: "האם אפשר להתחיל לשמור שבת בהדרגה?", a: "בהחלט! כל צעד נחשב. אפשר להתחיל מהדלקת נרות, קידוש, סעודה משפחתית או הימנעות מטלפון. אין 'הכל או כלום'." },
               { q: "מה עושים כל השבת?", a: "תפילה, סעודות משפחתיות, לימוד תורה, שינה, טיולים ברגל, משחקי קופסא, שיחות עם המשפחה, קריאה - והרבה מנוחה." },
               { q: "האם ילדים חייבים לשמור שבת?", a: "ילדים לומדים בהדרגה. המטרה היא ליצור חוויה חיובית ומשמחת שתגרום להם לרצות לשמור שבת." },
             ].map((item) => (
-              <details key={item.q} className="card p-5 group">
-                <summary className="font-bold text-[var(--color-blue-deep)] cursor-pointer list-none flex items-center justify-between">
-                  {item.q}
-                  <span className="text-[var(--color-gold)] group-open:rotate-180 transition-transform">▼</span>
-                </summary>
-                <p className="text-sm text-[var(--color-warm-gray)] mt-3 leading-relaxed">
-                  {item.a}
-                </p>
-              </details>
+              <StaggerItem key={item.q}>
+                <details className="card p-5 group">
+                  <summary className="font-bold text-[var(--color-blue-deep)] cursor-pointer list-none flex items-center justify-between">
+                    {item.q}
+                    <span className="text-[var(--color-gold)] group-open:rotate-180 transition-transform duration-300">▼</span>
+                  </summary>
+                  <p className="text-sm text-[var(--color-warm-gray)] mt-3 leading-relaxed">
+                    {item.a}
+                  </p>
+                </details>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </section>
 
         {/* Daily Quote */}
         {dailyQuote && (
-          <section className="mb-16">
+          <AnimatedSection variant="fadeUp" className="mb-16">
             <div className="quote-box max-w-2xl mx-auto">
               <h3 className="text-sm text-[var(--color-gold)] mb-4 font-sans font-bold">
                 חיזוק היום
@@ -252,11 +275,11 @@ export default function ShabbatContent() {
                 </p>
               )}
             </div>
-          </section>
+          </AnimatedSection>
         )}
 
         {/* CTA */}
-        <section>
+        <AnimatedSection variant="scaleUp">
           <div className="card max-w-lg mx-auto p-8 text-center gradient-gold text-white rounded-2xl">
             <h3 className="text-2xl font-black mb-3">
               שתי שבתות של אחדות וגאולה
@@ -266,12 +289,12 @@ export default function ShabbatContent() {
             </p>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 bg-white text-[var(--color-blue-deep)] font-bold py-3 px-8 rounded-xl hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-[var(--color-blue-deep)] font-bold py-3 px-8 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95"
             >
               הצטרף עכשיו
             </Link>
           </div>
-        </section>
+        </AnimatedSection>
       </div>
     </div>
   );

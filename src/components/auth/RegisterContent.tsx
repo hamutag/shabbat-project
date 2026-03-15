@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { trpc } from "@/lib/trpc";
+import { motion, AnimatePresence } from "framer-motion";
+import { GradientOrbs } from "@/components/ui/GradientOrbs";
 
 export default function RegisterContent() {
   const router = useRouter();
@@ -67,7 +69,6 @@ export default function RegisterContent() {
         return;
       }
 
-      // Auto-login after registration
       const loginResult = await signIn("credentials", {
         identifier: form.phone,
         password: form.password,
@@ -88,10 +89,23 @@ export default function RegisterContent() {
   };
 
   return (
-    <div className="min-h-screen gradient-light flex items-center justify-center py-12 px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen gradient-light flex items-center justify-center py-12 px-4 relative overflow-hidden">
+      <GradientOrbs variant="gold" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md relative"
+      >
         <div className="text-center mb-8">
-          <Image src="/logo.png" alt="פרויקט השבת" width={80} height={80} className="mx-auto mb-3 w-20 h-20 object-contain" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Image src="/logo.png" alt="פרויקט השבת" width={80} height={80} className="mx-auto mb-3 w-20 h-20 object-contain" />
+          </motion.div>
           <h1 className="text-3xl font-black text-[var(--color-blue-deep)] mb-2">
             הצטרף לפרויקט השבת
           </h1>
@@ -100,12 +114,19 @@ export default function RegisterContent() {
           </p>
         </div>
 
-        <div className="card p-8">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
-              {error}
-            </div>
-          )}
+        <div className="card p-8 shadow-lg backdrop-blur-lg bg-white/80 border border-white/40">
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -8, height: 0 }}
+                className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
@@ -172,9 +193,9 @@ export default function RegisterContent() {
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <label
-                  className={`card py-3 text-center cursor-pointer border-2 transition-colors ${
+                  className={`card py-3 text-center cursor-pointer border-2 transition-all duration-300 ${
                     form.gender === "MALE"
-                      ? "border-[var(--color-gold)] bg-amber-50"
+                      ? "border-[var(--color-gold)] bg-amber-50 shadow-md scale-[1.02]"
                       : "border-transparent hover:border-gray-300"
                   }`}
                 >
@@ -186,13 +207,13 @@ export default function RegisterContent() {
                     onChange={() => updateField("gender", "MALE")}
                     checked={form.gender === "MALE"}
                   />
-                  <span className="text-xl block mb-1">👨</span>
+                  <Image src="/icons/kippah-star.png" alt="גבר" width={32} height={32} className="w-8 h-8 mx-auto mb-1 object-contain" />
                   <span className="text-sm font-medium">גבר</span>
                 </label>
                 <label
-                  className={`card py-3 text-center cursor-pointer border-2 transition-colors ${
+                  className={`card py-3 text-center cursor-pointer border-2 transition-all duration-300 ${
                     form.gender === "FEMALE"
-                      ? "border-[var(--color-gold)] bg-amber-50"
+                      ? "border-[var(--color-gold)] bg-amber-50 shadow-md scale-[1.02]"
                       : "border-transparent hover:border-gray-300"
                   }`}
                 >
@@ -204,7 +225,7 @@ export default function RegisterContent() {
                     onChange={() => updateField("gender", "FEMALE")}
                     checked={form.gender === "FEMALE"}
                   />
-                  <span className="text-xl block mb-1">👩</span>
+                  <Image src="/icons/candle-holder.png" alt="אישה" width={32} height={32} className="w-8 h-8 mx-auto mb-1 object-contain" />
                   <span className="text-sm font-medium">אישה</span>
                 </label>
               </div>
@@ -281,7 +302,14 @@ export default function RegisterContent() {
               disabled={loading}
               className="btn-primary w-full py-3 text-lg mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? "נרשם..." : "הצטרף עכשיו"}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  נרשם...
+                </span>
+              ) : (
+                "הצטרף עכשיו"
+              )}
             </button>
 
             <p className="text-center text-xs text-[var(--color-warm-gray)] mt-4">
@@ -299,7 +327,7 @@ export default function RegisterContent() {
             התחבר
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
