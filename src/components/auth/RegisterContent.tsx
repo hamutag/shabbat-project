@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { trpc } from "@/lib/trpc";
 
 export default function RegisterContent() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { data: regions } = trpc.city.regions.useQuery();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -218,14 +220,28 @@ export default function RegisterContent() {
                 required
               >
                 <option value="">בחר עיר</option>
-                <option value="ירושלים">ירושלים</option>
-                <option value="תל אביב">תל אביב</option>
-                <option value="חיפה">חיפה</option>
-                <option value="באר שבע">באר שבע</option>
-                <option value="נתניה">נתניה</option>
-                <option value="אשדוד">אשדוד</option>
-                <option value="פתח תקווה">פתח תקווה</option>
-                <option value="בני ברק">בני ברק</option>
+                {regions ? (
+                  regions.map((region) => (
+                    <optgroup key={region.id} label={region.name}>
+                      {region.cities.map((city) => (
+                        <option key={city.id} value={city.name}>
+                          {city.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))
+                ) : (
+                  <>
+                    <option value="ירושלים">ירושלים</option>
+                    <option value="תל אביב-יפו">תל אביב-יפו</option>
+                    <option value="חיפה">חיפה</option>
+                    <option value="באר שבע">באר שבע</option>
+                    <option value="נתניה">נתניה</option>
+                    <option value="אשדוד">אשדוד</option>
+                    <option value="פתח תקווה">פתח תקווה</option>
+                    <option value="בני ברק">בני ברק</option>
+                  </>
+                )}
               </select>
             </div>
 
