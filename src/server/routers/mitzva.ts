@@ -11,6 +11,13 @@ export const mitzvaRouter = router({
     });
   }),
 
+  // Get single mitzva by slug
+  bySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input }) => prisma.mitzva.findUnique({
+      where: { slug: input.slug },
+    })),
+
   // Get user's mitzvot
   myMitzvot: protectedProcedure.query(async ({ ctx }) => {
     const userId = (ctx.session.user as { id: string }).id;

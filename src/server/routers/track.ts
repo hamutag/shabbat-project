@@ -18,6 +18,13 @@ export const trackRouter = router({
       include: { steps: { orderBy: { stepNumber: "asc" } } },
     })),
 
+  bySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input }) => prisma.track.findUnique({
+      where: { slug: input.slug },
+      include: { steps: { orderBy: { stepNumber: "asc" } } },
+    })),
+
   start: protectedProcedure
     .input(z.object({ trackId: z.string() }))
     .mutation(async ({ ctx, input }) => {
