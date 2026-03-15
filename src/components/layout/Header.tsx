@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 const NAV_LINKS = [
@@ -25,9 +25,12 @@ const USER_LINKS = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { data: session, status } = useSession();
 
-  const isLoggedIn = status === "authenticated" && !!session?.user;
+  useEffect(() => { setMounted(true); }, []);
+
+  const isLoggedIn = mounted && status === "authenticated" && !!session?.user;
   const userName = (session?.user as unknown as { firstName?: string })?.firstName
     || session?.user?.name
     || "משתמש";
@@ -67,7 +70,9 @@ export function Header() {
 
         {/* Auth Section + Mobile Toggle */}
         <div className="flex items-center gap-3">
-          {isLoggedIn ? (
+          {!mounted ? (
+            <div className="w-24 h-8" />
+          ) : isLoggedIn ? (
             <>
               {/* Desktop: User Dropdown */}
               <div className="relative hidden sm:block">
