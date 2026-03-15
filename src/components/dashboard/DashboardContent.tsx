@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -217,28 +218,28 @@ export default function DashboardContent() {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-[var(--color-cream)] rounded-xl">
-                  <span className="text-2xl block mb-1">🕯️</span>
+                  <div className="flex justify-center mb-1"><Image src="/icons/candles.png" alt="שבתות" width={32} height={32} className="w-8 h-8 object-contain" /></div>
                   <div className="text-2xl font-black text-[var(--color-gold)]">
                     {shabbatStreak?.totalKept || stats?.shabbatCount || 0}
                   </div>
                   <div className="text-xs text-[var(--color-warm-gray)]">שבתות ששמרתי</div>
                 </div>
                 <div className="text-center p-4 bg-[var(--color-cream)] rounded-xl">
-                  <span className="text-2xl block mb-1">🔥</span>
+                  <div className="flex justify-center mb-1"><Image src="/icons/crown-flame.png" alt="רצף" width={32} height={32} className="w-8 h-8 object-contain" /></div>
                   <div className="text-2xl font-black text-[var(--color-gold)]">
                     {shabbatStreak?.currentStreak || 0}
                   </div>
                   <div className="text-xs text-[var(--color-warm-gray)]">רצף נוכחי</div>
                 </div>
                 <div className="text-center p-4 bg-[var(--color-cream)] rounded-xl">
-                  <span className="text-2xl block mb-1">📖</span>
+                  <div className="flex justify-center mb-1"><Image src="/icons/open-torah.png" alt="שיעורים" width={32} height={32} className="w-8 h-8 object-contain" /></div>
                   <div className="text-2xl font-black text-[var(--color-gold)]">
                     {stats?.lessonsAttended || 0}
                   </div>
                   <div className="text-xs text-[var(--color-warm-gray)]">שיעורים</div>
                 </div>
                 <div className="text-center p-4 bg-[var(--color-cream)] rounded-xl">
-                  <span className="text-2xl block mb-1">✨</span>
+                  <div className="flex justify-center mb-1"><Image src="/icons/star-hands.png" alt="מצוות" width={32} height={32} className="w-8 h-8 object-contain" /></div>
                   <div className="text-2xl font-black text-[var(--color-gold)]">
                     {stats?.totalMitzvot || 0}
                   </div>
